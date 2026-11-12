@@ -11,8 +11,6 @@ import {
 } from '@/lib/sparkplug'
 import {
   Activity,
-  ArrowUpRight,
-  Cpu,
   Gauge,
   Lightbulb,
   Radio,
@@ -63,7 +61,7 @@ function StatusPill({
               : 'bg-red-400'
         }`}
       />
-      <span className="text-slate-500">{label}</span>
+      <span className="text-slate-300">{label}</span>
       {value}
     </div>
   )
@@ -87,17 +85,16 @@ function MetricCard({
     blue: 'text-sky-400',
   }
   return (
-    <div className="rounded-lg border border-slate-800 bg-slate-900/65 px-4 py-3 shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
-      <div className="mb-2 flex items-center justify-between gap-2">
-        <span className="text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-500">
+    <div className="flex flex-col items-center justify-center rounded-lg border border-slate-700/80 bg-slate-900/90 px-4 py-3 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.03)]">
+      <div className="mb-2">
+        <span className="text-sm font-semibold uppercase tracking-wider text-slate-200">
           {label}
         </span>
-        <ArrowUpRight className="size-3 text-slate-700" />
       </div>
-      <div className={`font-mono text-2xl font-semibold tracking-tight ${colors[tone]}`}>
+      <div className={`font-mono text-4xl font-bold tracking-tight ${colors[tone]}`}>
         {value}
       </div>
-      <div className="mt-1 text-[11px] text-slate-500">{detail}</div>
+      <div className="mt-1 text-[11px] text-slate-300">{detail}</div>
     </div>
   )
 }
@@ -418,35 +415,13 @@ export default function Page() {
   const deviceActive = mqttConnected && nodeOnline && deviceOnline && opcuaState === 'DONE'
 
   return (
-    <main className="min-h-screen bg-[#070b11] text-slate-100 selection:bg-emerald-400/30">
+    <main className="min-h-screen bg-slate-950 text-slate-100 selection:bg-emerald-400/30">
       <div className="mx-auto max-w-[1500px] px-4 py-5 sm:px-6 lg:px-8">
-        <header className="mb-5 flex flex-col gap-4 border-b border-slate-800/80 pb-5 lg:flex-row lg:items-center lg:justify-between">
-          <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg border border-emerald-400/30 bg-emerald-400/10 text-emerald-300 shadow-[0_0_22px_rgba(52,211,153,0.08)]">
-              <Cpu className="size-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="text-lg font-semibold tracking-tight text-slate-100">
-                  SPARKPLUG <span className="text-emerald-400">HOST</span>
-                </h1>
-                <span className="rounded border border-slate-700 bg-slate-900 px-1.5 py-0.5 font-mono text-[9px] text-slate-500">
-                  spBv1.0
-                </span>
-              </div>
-              <p className="mt-0.5 text-xs text-slate-500">
-                Consola industrial de telemetría y control de dispositivos
-              </p>
-            </div>
-          </div>
-          <div className="flex flex-wrap items-center gap-2">
+        <header className="mb-5 flex justify-center border-b border-slate-700/80 pb-5">
+          <div className="flex flex-wrap items-center justify-center gap-2">
             <StatusPill label="MQTT" value={mqttLabel} tone={mqttTone} />
             <StatusPill label="MODBUS" value={modbusLabel} tone={modbusTone} />
             <StatusPill label="OPC UA" value={opcuaLabel} tone={opcuaTone} />
-            <span className="hidden h-5 w-px bg-slate-800 sm:block" />
-            <span className="font-mono text-[11px] text-slate-500">
-              {GROUP_ID} / {EDGE_NODE_ID}
-            </span>
           </div>
         </header>
 
@@ -454,46 +429,43 @@ export default function Page() {
           <MetricCard
             label="Peticiones Modbus"
             value={modbusOk.toLocaleString('es-AR')}
-            detail={`Estado: ${modbusLabel}`}
+            
             tone="green"
           />
           <MetricCard
             label="Errores CRC"
             value={String(crcErrors)}
-            detail="Status/MODBUS/CRC_ERROR"
+            
             tone="red"
           />
           <MetricCard
             label="Tiempo de espera"
             value={String(timeouts)}
-            detail="Status/MODBUS/TIMEOUT"
+            
             tone="yellow"
           />
           <MetricCard
             label="Rebirths Sparkplug"
             value={String(rebirthCount)}
-            detail={`bdSeq: ${bdSeq ?? '—'} · Reconexiones MQTT: ${mqttReconnects}`}
+            
             tone="blue"
           />
         </section>
 
         <section className="mb-5 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
-          <div className="rounded-xl border border-slate-800 bg-[#0c121b] p-5 shadow-2xl shadow-black/10">
+          <div className="rounded-xl border border-slate-700/80 bg-slate-900/90 p-5 shadow-2xl shadow-black/10">
             <div className="mb-5 flex items-start justify-between">
               <div>
-                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  <Zap className="size-3.5 text-sky-400" /> Dispositivo 1 / Actuadores
+                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">
+                  <Zap className="size-3.5 text-sky-400" /> Actuadores
                 </div>
                 <h2 className="text-xl font-semibold text-slate-100">Control de Salidas</h2>
-                <p className="mt-1 text-xs text-slate-500">
-                  Los comandos DCMD (Protobuf) se publican sobre MQTT WebSockets.
-                </p>
               </div>
               <span
                 className={`rounded-full border px-2 py-1 font-mono text-[10px] ${
                   deviceActive
                     ? 'border-emerald-400/20 bg-emerald-400/10 text-emerald-300'
-                    : 'border-red-400/20 bg-red-400/10 text-red-300'
+                    : 'border-slate-600 bg-slate-800 text-slate-200'
                 }`}
               >
                 {deviceActive ? 'CONECTADO' : 'OFFLINE'}
@@ -501,15 +473,15 @@ export default function Page() {
             </div>
 
             <div className="grid gap-4 md:grid-cols-2">
-              <div className="rounded-lg border border-slate-800 bg-slate-950/45 p-4">
+              <div className="rounded-lg border border-slate-700/80 bg-slate-950/70 p-4">
                 <div className="mb-6 flex items-start justify-between">
                   <div>
-                    <p className="font-mono text-sm text-slate-200">Outputs/LEDDigital</p>
-                    <p className="mt-1 text-[11px] text-slate-500">Booleano · DCMD</p>
+                    <p className="font-mono text-sm text-slate-200">LED Digital</p>
+                    
                   </div>
                   <Lightbulb
                     className={`size-5 ${
-                      deviceActive && digitalOn ? 'text-emerald-300' : 'text-slate-600'
+                      deviceActive && digitalOn ? 'text-emerald-300' : 'text-slate-400'
                     }`}
                   />
                 </div>
@@ -553,17 +525,17 @@ export default function Page() {
                     publishDcmd('Outputs/LEDDigital', SpbDataType.Boolean, !digitalOn)
                   }
                   variant="outline"
-                  className="mt-3 h-8 w-full border-slate-700 bg-transparent text-xs text-slate-300 hover:bg-sky-400/10 hover:text-sky-300"
+                  className="mt-3 h-8 w-full border-slate-600 bg-transparent text-xs text-slate-100 hover:bg-slate-800 hover:border-sky-400"
                 >
                   <Send data-icon="inline-start" /> Publicar DCMD
                 </Button>
               </div>
 
-              <div className="rounded-lg border border-slate-800 bg-slate-950/45 p-4">
+              <div className="rounded-lg border border-slate-700/80 bg-slate-950/70 p-4">
                 <div className="mb-5 flex items-start justify-between">
                   <div>
-                    <p className="font-mono text-sm text-slate-200">Outputs/LEDPWM</p>
-                    <p className="mt-1 text-[11px] text-slate-500">UInt16 · 0 — 255 · DCMD</p>
+                    <p className="font-mono text-sm text-slate-200">LED PWM</p>
+                    
                   </div>
                   <span className="font-mono text-xl font-semibold text-sky-300">{pwm}</span>
                 </div>
@@ -577,16 +549,18 @@ export default function Page() {
                   onChange={(event) => setPwm(Number(event.target.value))}
                   className="h-1.5 w-full cursor-pointer accent-sky-400 disabled:cursor-not-allowed disabled:opacity-40"
                 />
-                <div className="mt-2 flex justify-between font-mono text-[10px] text-slate-600">
+                <div className="mt-2 flex justify-between font-mono text-[10px] text-slate-200">
                   <span>0</span>
-                  <span>{deviceActive ? `${pwmPercent}% intensidad` : 'OFFLINE'}</span>
+                  <span className="text-slate-300">
+                    {deviceActive ? `${pwmPercent}% intensidad` : 'OFFLINE'}
+                  </span>
                   <span>255</span>
                 </div>
                 <Button
                   disabled={!deviceActive}
                   onClick={() => publishDcmd('Outputs/LEDPWM', SpbDataType.UInt16, pwm)}
                   variant="outline"
-                  className="mt-4 h-8 w-full border-slate-700 bg-transparent text-xs text-slate-300 hover:bg-sky-400/10 hover:text-sky-300"
+                  className="mt-4 h-8 w-full border-slate-600 bg-transparent text-xs text-slate-100 hover:bg-slate-800 hover:border-sky-400"
                 >
                   <Send data-icon="inline-start" /> Publicar DCMD
                 </Button>
@@ -594,18 +568,13 @@ export default function Page() {
             </div>
           </div>
 
-          <div className="rounded-xl border border-slate-800 bg-[#0c121b] p-5 shadow-2xl shadow-black/10">
+          <div className="rounded-xl border border-slate-700/80 bg-slate-900/90 p-5 shadow-2xl shadow-black/10">
             <div className="mb-5 flex items-start justify-between">
               <div>
-                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">
-                  <Activity className="size-3.5 text-emerald-400" /> Dispositivo 1 / Sensores
+                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.18em] text-slate-200">
+                  <Activity className="size-3.5 text-emerald-400" /> Sensores
                 </div>
                 <h2 className="text-xl font-semibold text-slate-100">Telemetría de Entradas</h2>
-                <p className="mt-1 text-xs text-slate-500">
-                  {deviceActive && lastUpdateMs
-                    ? `Última trama · ${new Date(lastUpdateMs).toLocaleTimeString('es-AR', { hour12: false })}`
-                    : 'Esperando tramas Sparkplug B...'}
-                </p>
               </div>
               <Radio
                 className={`size-5 ${deviceActive ? 'text-emerald-400' : 'text-red-400'}`}
@@ -613,12 +582,18 @@ export default function Page() {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-1">
-              <div className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/45 p-4">
+              <div className="flex items-center justify-between rounded-lg border border-slate-700/80 bg-slate-950/70 p-4">
                 <div>
-                  <p className="font-mono text-sm text-slate-200">Inputs/PulsadorLocal</p>
-                  <p className="mt-1 text-[11px] text-slate-500">Entrada Digital (Boolean)</p>
+                  <p className="font-mono text-sm text-slate-200">Pulsador</p>
+                  
                 </div>
-                <span className="flex items-center gap-2 rounded-full border border-slate-700 px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider text-slate-400">
+                <span
+                  className={`flex items-center gap-2 rounded-full border px-2.5 py-1.5 text-[10px] font-semibold uppercase tracking-wider ${
+                    deviceActive
+                      ? 'border-slate-700 text-slate-300'
+                      : 'border-slate-600 bg-slate-800 text-slate-200'
+                  }`}
+                >
                   <span
                     className={`size-2 rounded-full ${
                       !deviceActive
@@ -632,13 +607,11 @@ export default function Page() {
                 </span>
               </div>
 
-              <div className="rounded-lg border border-slate-800 bg-slate-950/45 p-4">
+              <div className="rounded-lg border border-slate-700/80 bg-slate-950/70 p-4">
                 <div className="mb-4 flex items-center justify-between">
                   <div>
-                    <p className="font-mono text-sm text-slate-200">Inputs/Potenciometro</p>
-                    <p className="mt-1 text-[11px] text-slate-500">
-                      Entrada Analógica (0 - 1023)
-                    </p>
+                    <p className="font-mono text-sm text-slate-200">Potenciometro</p>
+                    
                   </div>
                   <Gauge className="size-5 text-emerald-400" />
                 </div>
@@ -651,16 +624,18 @@ export default function Page() {
                       }%, #17212f 0)`,
                     }}
                   >
-                    <div className="absolute inset-1.5 flex items-center justify-center rounded-full bg-[#0c121b]">
+                    <div className="absolute inset-1.5 flex items-center justify-center rounded-full bg-slate-900">
                       <span className="font-mono text-sm font-semibold text-emerald-300">
                         {deviceActive ? pot : '—'}
                       </span>
                     </div>
                   </div>
                   <div className="flex-1">
-                    <div className="mb-2 flex justify-between font-mono text-[10px] text-slate-500">
+                    <div className="mb-2 flex justify-between font-mono text-[10px] text-slate-200">
                       <span>0</span>
-                      <span>{deviceActive ? `${potPercent}%` : 'OFFLINE'}</span>
+                      <span className="text-slate-300">
+                        {deviceActive ? `${potPercent}%` : 'OFFLINE'}
+                      </span>
                       <span>1023</span>
                     </div>
                     <div className="h-2 overflow-hidden rounded-full bg-slate-800">
@@ -676,8 +651,8 @@ export default function Page() {
           </div>
         </section>
 
-        <section className="overflow-hidden rounded-xl border border-slate-800 bg-[#080c12] shadow-2xl shadow-black/10">
-          <div className="flex flex-col gap-3 border-b border-slate-800 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+        <section className="overflow-hidden rounded-xl border border-slate-700/80 bg-slate-900/90 shadow-2xl shadow-black/10">
+          <div className="flex flex-col gap-3 border-b border-slate-700/80 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2">
               <Terminal className="size-4 text-emerald-400" />
               <h2 className="text-sm font-semibold text-slate-200">Registro de Eventos</h2>
@@ -685,16 +660,13 @@ export default function Page() {
                 className={`rounded px-1.5 py-0.5 font-mono text-[10px] ${
                   nodeOnline
                     ? 'bg-emerald-500/15 text-emerald-300'
-                    : 'bg-slate-900 text-slate-600'
+                    : 'border border-slate-600 bg-slate-800 text-slate-200'
                 }`}
               >
                 {nodeOnline ? 'EN VIVO' : 'INACTIVO'}
               </span>
             </div>
             <div className="flex items-center gap-3">
-              <span className="font-mono text-[10px] text-slate-500">
-                seq: {seq ?? '—'} · bdSeq: {bdSeq ?? '—'}
-              </span>
               <Button
                 disabled={!mqttConnected || rebirthSending}
                 onClick={() => {
@@ -710,19 +682,19 @@ export default function Page() {
                   data-icon="inline-start"
                   className={rebirthSending ? 'animate-spin' : ''}
                 />
-                {rebirthSending ? 'Enviando...' : 'Reiniciar Nodo (Rebirth)'}
+                {rebirthSending ? 'Enviando...' : 'Reiniciar Nodo'}
               </Button>
             </div>
           </div>
 
           <div className="p-3 font-mono text-xs">
-            <div className="mb-2 hidden grid-cols-[105px_90px_1fr] gap-4 px-2 text-[10px] uppercase tracking-widest text-slate-700 sm:grid">
+            <div className="mb-2 hidden grid-cols-[105px_90px_1fr] gap-4 px-2 text-[10px] uppercase tracking-widest text-slate-300 sm:grid">
               <span>Timestamp</span>
               <span>Tipo</span>
               <span>Payload</span>
             </div>
             {logs.length === 0 ? (
-              <div className="px-2 py-3 text-slate-600">
+              <div className="px-2 py-3 text-slate-300">
                 Conectando al broker MQTT y esperando tramas Sparkplug B...
               </div>
             ) : (
@@ -731,7 +703,7 @@ export default function Page() {
                   key={`${log.time}-${index}`}
                   className="grid gap-1 rounded px-2 py-2.5 transition hover:bg-slate-900/60 sm:grid-cols-[105px_90px_1fr] sm:gap-4"
                 >
-                  <span className="text-slate-600">{log.time}</span>
+                  <span className="text-slate-300">{log.time}</span>
                   <span
                     className={
                       log.tone === 'green'
@@ -746,7 +718,7 @@ export default function Page() {
                     {log.topic}
                   </span>
                   <span className="text-slate-400 break-all">
-                    <span className="text-slate-600">spBv1.0/{GROUP_ID}/</span>
+                    <span className="text-slate-300">spBv1.0/{GROUP_ID}/</span>
                     {log.message}
                   </span>
                 </div>
@@ -754,28 +726,7 @@ export default function Page() {
             )}
           </div>
 
-          <div className="flex items-center gap-2 border-t border-slate-900 bg-black/20 px-5 py-2.5 text-[10px] text-slate-600">
-            <span
-              className={`size-1.5 rounded-full ${
-                mqttConnected ? 'bg-emerald-400' : 'bg-red-400'
-              }`}
-            />
-            {BROKER_URL}
-            <span className="ml-auto hidden sm:inline">
-              QoS 1 · Protobuf · Sparkplug B · spBv1.0/{GROUP_ID}/#
-            </span>
-          </div>
         </section>
-
-        <footer className="flex flex-col gap-2 py-5 text-[10px] uppercase tracking-[0.15em] text-slate-700 sm:flex-row sm:items-center sm:justify-between">
-          <span>Interfaz Host Application / UNRaf PdCI</span>
-          <span className="flex items-center gap-2">
-            <Server className="size-3" /> MQTT WebSockets ·{' '}
-            <span className={mqttConnected ? 'text-emerald-500/70' : 'text-red-500/70'}>
-              {mqttLabel}
-            </span>
-          </span>
-        </footer>
       </div>
     </main>
   )

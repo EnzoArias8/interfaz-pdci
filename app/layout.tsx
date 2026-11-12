@@ -3,25 +3,13 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Sparkplug Host Console',
+  title: 'Interfaz - PdCI',
   description: 'Industrial SCADA dashboard for Sparkplug B telemetry and device control.',
   generator: 'v0.app',
   icons: {
-    icon: [
-      {
-        url: '/icon-light-32x32.png',
-        media: '(prefers-color-scheme: light)',
-      },
-      {
-        url: '/icon-dark-32x32.png',
-        media: '(prefers-color-scheme: dark)',
-      },
-      {
-        url: '/icon.svg',
-        type: 'image/svg+xml',
-      },
-    ],
-    apple: '/apple-icon.png',
+    icon: 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23070b11%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%227%22 fill=%22%2334d399%22/%3E%3C/svg%3E',
+    apple:
+      'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%200%2032%2032%22%3E%3Crect width=%2232%22 height=%2232%22 rx=%228%22 fill=%22%23070b11%22/%3E%3Ccircle cx=%2216%22 cy=%2216%22 r=%227%22 fill=%22%2334d399%22/%3E%3C/svg%3E',
   },
 }
 
